@@ -2,14 +2,16 @@ import sys
 import socket
 import json
 import logging
-import log.log_configs.server_log_config
+import logs.log_configs.server_log_config
 
 from common.variables import DEFAULT_PORT, MAX_CONNECTIONS, ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, ERROR
 from common.utils import get_message, send_message
+from common.decorators import log
 
 
 logger = logging.getLogger('app.server')
 
+@log
 def process_client_message(message: dict) -> dict:
     '''
     Обработчик сообщений от клиентов, принимает словарь-сообщение от клиента,
