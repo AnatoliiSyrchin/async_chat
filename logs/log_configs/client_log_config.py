@@ -1,10 +1,13 @@
+import os
 import logging
 
 logger = logging.getLogger('app.client')
 
+log_file = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)) + '/log_files/app.client.log'
+
 formatter = logging.Formatter('%(asctime)s  %(levelname)-8s  %(module)-10s %(message)s')
 
-file_handler = logging.FileHandler('log/log_files/app.client.log', encoding='utf-8')
+file_handler = logging.FileHandler(log_file, encoding='utf-8')
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)
 

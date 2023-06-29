@@ -4,17 +4,21 @@ import json
 import time
 import logging
 
-import log.log_configs.client_log_config
+import logs.log_configs.client_log_config
 from common.variables import ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, RESPONSE, ERROR, DEFAULT_IP_ADDRESS, DEFAULT_PORT
 from common.utils import get_message, send_message
+from common.decorators import log
 
 logger = logging.getLogger('app.client')
 
+@log
 def create_presence (account_name: str = 'Guest') -> dict:
     # {'action': 'presence', 'time': 1573760672.167031, 'user': {'account_name': 'Guest'}}
     out = {ACTION: PRESENCE, TIME: time.time(), USER: {ACCOUNT_NAME: account_name } }
     return out
 
+
+@log
 def process_ans(message: dict) -> str:
     '''
     Функция разбирает ответ сервера
