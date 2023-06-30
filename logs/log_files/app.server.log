@@ -1,38 +1,38 @@
-2023-06-28 22:26:20,820  DEBUG     server     Используется порт по умолчанию
-2023-06-28 22:26:20,820  DEBUG     server     Адрес не задан, принимаются соединения с любых адресов
-2023-06-28 22:26:20,820  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: .
-2023-06-28 22:26:20,823  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 61692)
-2023-06-28 22:26:20,824  DEBUG     decorators Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=512, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61692)>,), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,824  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1687980380.8235967, 'user': {'account_name': 'Guest'}}
-2023-06-28 22:26:20,825  DEBUG     decorators Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1687980380.8235967, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,825  INFO      server     Подготовлен ответ клиенту {'response': 200}
-2023-06-28 22:26:20,825  DEBUG     decorators Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=512, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61692)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,825  INFO      server     Соединение с клиентом ('127.0.0.1', 61692) закрывается
-2023-06-28 22:26:20,833  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 61693)
-2023-06-28 22:26:20,834  DEBUG     decorators Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=524, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61693)>,), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,835  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1687980380.8335965, 'user': {'account_name': 'Guest'}}
-2023-06-28 22:26:20,835  DEBUG     decorators Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1687980380.8335965, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,835  INFO      server     Подготовлен ответ клиенту {'response': 200}
-2023-06-28 22:26:20,835  DEBUG     decorators Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=524, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61693)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,835  INFO      server     Соединение с клиентом ('127.0.0.1', 61693) закрывается
-2023-06-28 22:26:20,835  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 61694)
-2023-06-28 22:26:20,836  DEBUG     decorators Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=524, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61694)>,), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,836  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1687980380.834595, 'user': {'account_name': 'Guest'}}
-2023-06-28 22:26:20,836  DEBUG     decorators Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1687980380.834595, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,836  INFO      server     Подготовлен ответ клиенту {'response': 200}
-2023-06-28 22:26:20,836  DEBUG     decorators Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=524, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61694)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,836  INFO      server     Соединение с клиентом ('127.0.0.1', 61694) закрывается
-2023-06-28 22:26:20,837  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 61695)
-2023-06-28 22:26:20,838  DEBUG     decorators Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=524, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61695)>,), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,838  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1687980380.8375988, 'user': {'account_name': 'Guest'}}
-2023-06-28 22:26:20,838  DEBUG     decorators Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1687980380.8375988, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,838  INFO      server     Подготовлен ответ клиенту {'response': 200}
-2023-06-28 22:26:20,839  DEBUG     decorators Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=524, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61695)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:20,839  INFO      server     Соединение с клиентом ('127.0.0.1', 61695) закрывается
-2023-06-28 22:26:21,322  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 61691)
-2023-06-28 22:26:21,323  DEBUG     decorators Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=524, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61691)>,), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:21,323  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1687980381.322657, 'user': {'account_name': 'Guest'}}
-2023-06-28 22:26:21,323  DEBUG     decorators Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1687980381.322657, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:21,323  INFO      server     Подготовлен ответ клиенту {'response': 200}
-2023-06-28 22:26:21,324  DEBUG     decorators Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=524, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 61691)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
-2023-06-28 22:26:21,324  INFO      server     Соединение с клиентом ('127.0.0.1', 61691) закрывается
+2023-06-30 00:43:35,729  DEBUG     server     Используется порт по умолчанию
+2023-06-30 00:43:35,729  DEBUG     server     Адрес не задан, принимаются соединения с любых адресов
+2023-06-30 00:43:35,729  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: .
+2023-06-30 00:43:35,745  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 51377)
+2023-06-30 00:43:35,745  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=540, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51377)>,), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,745  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1688075015.7453017, 'user': {'account_name': 'Guest'}}
+2023-06-30 00:43:35,745  DEBUG     server     Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1688075015.7453017, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,745  INFO      server     Подготовлен ответ клиенту {'response': 200}
+2023-06-30 00:43:35,745  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=540, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51377)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,745  INFO      server     Соединение с клиентом ('127.0.0.1', 51377) закрывается
+2023-06-30 00:43:35,745  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 51378)
+2023-06-30 00:43:35,745  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=468, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51378)>,), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,745  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1688075015.7453017, 'user': {'account_name': 'Guest'}}
+2023-06-30 00:43:35,745  DEBUG     server     Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1688075015.7453017, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,745  INFO      server     Подготовлен ответ клиенту {'response': 200}
+2023-06-30 00:43:35,745  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=468, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51378)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,745  INFO      server     Соединение с клиентом ('127.0.0.1', 51378) закрывается
+2023-06-30 00:43:35,760  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 51379)
+2023-06-30 00:43:35,760  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=468, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51379)>,), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,760  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1688075015.7609258, 'user': {'account_name': 'Guest'}}
+2023-06-30 00:43:35,760  DEBUG     server     Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1688075015.7609258, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,760  INFO      server     Подготовлен ответ клиенту {'response': 200}
+2023-06-30 00:43:35,760  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=468, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51379)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,760  INFO      server     Соединение с клиентом ('127.0.0.1', 51379) закрывается
+2023-06-30 00:43:35,760  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 51380)
+2023-06-30 00:43:35,760  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=468, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51380)>,), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,760  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1688075015.7609258, 'user': {'account_name': 'Guest'}}
+2023-06-30 00:43:35,760  DEBUG     server     Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1688075015.7609258, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,760  INFO      server     Подготовлен ответ клиенту {'response': 200}
+2023-06-30 00:43:35,760  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=468, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51380)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:35,760  INFO      server     Соединение с клиентом ('127.0.0.1', 51380) закрывается
+2023-06-30 00:43:36,252  INFO      server     Установлено соединени с клиентом ('127.0.0.1', 51376)
+2023-06-30 00:43:36,253  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=456, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51376)>,), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:36,253  DEBUG     server     Получили сообщение от клиента{'action': 'presence', 'time': 1688075016.2514677, 'user': {'account_name': 'Guest'}}
+2023-06-30 00:43:36,253  DEBUG     server     Вызов функции process_client_message из модуля server с параметрами (({'action': 'presence', 'time': 1688075016.2514677, 'user': {'account_name': 'Guest'}},), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:36,253  INFO      server     Подготовлен ответ клиенту {'response': 200}
+2023-06-30 00:43:36,253  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=456, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 51376)>, {'response': 200}), {}).Вызов произошел из функции main из модуля server.
+2023-06-30 00:43:36,253  INFO      server     Соединение с клиентом ('127.0.0.1', 51376) закрывается

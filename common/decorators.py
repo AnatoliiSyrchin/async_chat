@@ -17,12 +17,12 @@ def log(func):
         result = func(*args, **kwargs)
 
         traceback_result = traceback.format_stack()[0].split()
-        # изменил получение имени функции, чтобы работало, даже если функцияя с параметрами
+        # изменил получение имени функции, чтобы работало, даже если функция с параметрами
         traceback_func = traceback_result[6].split('(')[0]
         func_module = func.__module__ if func.__module__ != '__main__' else CALLING_MODULE_NAME
 
         LOGGER.debug(f'Вызов функции {func.__name__} из модуля {func_module} с параметрами {args, kwargs}.'
-            f'Вызов произошел из функции {traceback_func} из модуля {CALLING_MODULE_NAME}.')
+                     f'Вызов произошел из функции {traceback_func} из модуля {CALLING_MODULE_NAME}.', stacklevel=2)
 
         return result
     return wrapper
