@@ -2,7 +2,10 @@ import json
 from socket import socket
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING
 from common.decorators import log
+import logging
+import logs.log_configs.server_log_config
 
+logger = logging.getLogger('app.server')
 
 @log
 def get_message(sock: socket) -> dict:
@@ -20,6 +23,7 @@ def get_message(sock: socket) -> dict:
             return response
         raise ValueError
     raise ValueError
+
 
 @log
 def send_message(sock: socket, message: dict):
