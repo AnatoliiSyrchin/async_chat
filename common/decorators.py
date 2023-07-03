@@ -14,7 +14,7 @@ LOGGER = logging.getLogger(f'app.{CALLING_MODULE_NAME}')
 
 def log(func):
     def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
+
 
         traceback_result = traceback.format_stack()[0].split()
         # изменил получение имени функции, чтобы работало, даже если функция с параметрами
@@ -23,6 +23,8 @@ def log(func):
 
         LOGGER.debug(f'Вызов функции {func.__name__} из модуля {func_module} с параметрами {args, kwargs}.'
                      f'Вызов произошел из функции {traceback_func} из модуля {CALLING_MODULE_NAME}.', stacklevel=2)
+        
+        result = func(*args, **kwargs)
 
         return result
     return wrapper
