@@ -12,9 +12,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 CALLING_MODULE_NAME = sys.argv[0].split('/')[-1].split('.')[0]
 LOGGER = logging.getLogger(f'app.{CALLING_MODULE_NAME}')
 
+
 def log(func):
     def wrapper(*args, **kwargs):
-
 
         traceback_result = traceback.format_stack()[0].split()
         # изменил получение имени функции, чтобы работало, даже если функция с параметрами
