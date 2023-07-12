@@ -8,7 +8,7 @@ log_file = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardi
 
 formatter = logging.Formatter('%(asctime)s  %(levelname)-8s  %(module)-10s %(message)s')
 
-file_handler = logging.handlers.TimedRotatingFileHandler(log_file, when='M', interval=5, encoding='utf-8')
+file_handler = logging.handlers.TimedRotatingFileHandler(log_file, when='M', interval=20, encoding='utf-8')
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)
 
