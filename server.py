@@ -10,93 +10,18 @@ from common.variables import DEFAULT_PORT, MAX_CONNECTIONS, ACTION, PRESENCE, TI
     RESPONSE, ERROR, MESSAGE, TEXT, SENDER, RECIPIENT, EXIT
 from common.utils import get_message, send_message
 from common.decorators import log
+from common.descriptors import Port
+from common.metaclasses import ServerVerifier
 
 
 logger = logging.getLogger('app.server')
 
 
 @log
-def process_client_message(sock: socket.socket, all_clients: list, message: dict, names: dict, requests: list):
-    """
-    Обработчик сообщений от клиентов, принимает словарь-сообщение от клиента,
-    проверяет корректность, возвращает словарь-ответ для клиента
-    :param message:
-    :param names:
-    :param all_clients:
-    :param requests:
-    :param sock:
-    :return:
-    """
-    # {'action': 'presence', 'time': 1573760672.167031, 'user': {'account_name': 'Guest'}}
-
-    if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
-            and USER in message and ACCOUNT_NAME in message[USER]:
-
-        if message[USER][ACCOUNT_NAME] not in names.keys():
-            names[message[USER][ACCOUNT_NAME]] = sock
-            send_message(sock, {RESPONSE: 200})
-        else:
-            logger.info('RESPONSE: 400, ERROR: "account name already exists"')
-            send_message(sock, {RESPONSE: 400, ERROR: 'account name already exists'})
-            all_clients.remove(sock)
-            sock.close()
-        return
-
-    elif ACTION in message and message[ACTION] == EXIT and TIME in message and \
-            USER in message and ACCOUNT_NAME in message[USER]:
-        del names[message[USER][ACCOUNT_NAME]]
-        all_clients.remove(sock)
-        sock.close()
-        return
-
-    elif ACTION in message and message[ACTION] == MESSAGE and TIME in message and \
-            SENDER in message and RECIPIENT in message and TEXT in message:
-        requests.append((sock, message))
-        return message
-
-    else:
-        send_message(sock, {RESPONSE: 400, ERROR: 'Bad Request'})
-        return
-    
-
-@log
-def read_requests(r_clients: list, all_clients: list, names: dict, requests: list):
-    for read_waiting_client in r_clients:
-        try:
-            message_from_client = get_message(read_waiting_client)
-            logger.info(f'Получили сообщение от клиента {read_waiting_client.getpeername()} {message_from_client}')
-            process_client_message(read_waiting_client, all_clients, message_from_client, names, requests)
-        except (ValueError, json.JSONDecodeError):
-            logger.error('Принято некорректное сообщение от клиента.')
-        except ConnectionError:
-            all_clients.remove(read_waiting_client)
-            logger.info(f'Соединение с клиентом {read_waiting_client} потеряно')
-
-
-@log
-def write_responses(w_clients, all_clients, names, requests):
-    while requests:
-        sock, message = requests.pop()
-        logger.error(f'pop {message}')
-        recipient = message[RECIPIENT]
-        if recipient in names:
-            recipient_socket = names[recipient]
-            try:
-                send_message(recipient_socket, message)
-            except ConnectionError:
-                all_clients.remove(recipient_socket)
-                del names[recipient]
-                logger.info(f'Соединение с клиентом {recipient} потеряно')
-        else:
-            send_message(sock, {RESPONSE: 400, ERROR: f'account name {recipient} does not exist'})
-            logger.info(f'Клиент с именем {recipient} не существует')
-
-
-@log
 def get_server_parameters():
     """
     Загрузка параметров командной строки,
-    если нет параметров, то задаём значения по умоланию.
+    если нет параметров, то задаём значения по умолчанию.
     :return:
     """
     
@@ -104,57 +29,128 @@ def get_server_parameters():
     parser.add_argument('-p', '--port', default=DEFAULT_PORT, type=int, nargs='?')
     parser.add_argument('-a', '--address', default='', nargs='?')
     namespace = parser.parse_args(sys.argv[1:])
-    listen_port = namespace.port
-    listen_address = namespace.address
 
-    if listen_port < 1024 or listen_port > 65535:
-        logger.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535')
-        sys.exit(1) 
+    return namespace.address, namespace.port
 
-    return listen_port, listen_address
+
+class Server(metaclass=ServerVerifier):
+    port = Port()
+
+    def __init__(self, listen_address, listen_port):
+        self.address = listen_address
+        self.port = listen_port
+
+        self.all_clients = []
+        self.requests = []
+        self.names = {}
+        self.transport = None
+
+    def init_server(self):
+        logger.info(f'Запущен сервер, порт для подключений: {self.port}, адрес: {self.address}')
+        self.transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            self.transport.bind((self.address, self.port))
+        except Exception as error:
+            logger.error(f'exception in init_server {error}')
+            sys.exit(1)
+
+        # Слушаем порт
+        self.transport.listen(MAX_CONNECTIONS)
+        self.transport.settimeout(1)
+
+    def process_client_message(self, sock: socket.socket, message: dict):
+        """
+        Обработчик сообщений от клиентов, принимает словарь-сообщение от клиента,
+        проверяет корректность, возвращает словарь-ответ для клиента.
+        :param message:
+        :param sock:
+        :return:
+        """
+        # {'action': 'presence', 'time': 1573760672.167031, 'user': {'account_name': 'Guest'}}
+
+        if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
+                and USER in message and ACCOUNT_NAME in message[USER]:
+
+            if message[USER][ACCOUNT_NAME] not in self.names.keys():
+                self.names[message[USER][ACCOUNT_NAME]] = sock
+                send_message(sock, {RESPONSE: 200})
+            else:
+                logger.info('RESPONSE: 400, ERROR: "account name already exists"')
+                send_message(sock, {RESPONSE: 400, ERROR: 'account name already exists'})
+                self.all_clients.remove(sock)
+                sock.close()
+            return
+
+        elif ACTION in message and message[ACTION] == EXIT and TIME in message and \
+                USER in message and ACCOUNT_NAME in message[USER]:
+            del self.names[message[USER][ACCOUNT_NAME]]
+            self.all_clients.remove(sock)
+            sock.close()
+            return
+
+        elif ACTION in message and message[ACTION] == MESSAGE and TIME in message and \
+                SENDER in message and RECIPIENT in message and TEXT in message:
+            self.requests.append((sock, message))
+            return
+
+        else:
+            send_message(sock, {RESPONSE: 400, ERROR: 'Bad Request'})
+            return
+
+    def read_requests(self, r_clients: list):
+        for read_waiting_client in r_clients:
+            try:
+                message_from_client = get_message(read_waiting_client)
+                logger.info(f'Получили сообщение от клиента {read_waiting_client.getpeername()} {message_from_client}')
+                self.process_client_message(read_waiting_client, message_from_client)
+            except (ValueError, json.JSONDecodeError):
+                logger.error('Принято некорректное сообщение от клиента.')
+            except ConnectionError:
+                self.all_clients.remove(read_waiting_client)
+                logger.info(f'Соединение с клиентом {read_waiting_client} потеряно')
+
+    def write_responses(self):
+        while self.requests:
+            sock, message = self.requests.pop()
+            recipient = message[RECIPIENT]
+            if recipient in self.names:
+                recipient_socket = self.names[recipient]
+                try:
+                    send_message(recipient_socket, message)
+                except ConnectionError:
+                    self.all_clients.remove(recipient_socket)
+                    del self.names[recipient]
+                    logger.info(f'Соединение с клиентом {recipient} потеряно')
+            else:
+                send_message(sock, {RESPONSE: 400, ERROR: f'account name {recipient} does not exist'})
+                logger.info(f'Клиент с именем {recipient} не существует')
+
+    def main_loop(self):
+        while True:
+            try:
+                client, client_address = self.transport.accept()
+                logger.info(f'Установлено соединение с клиентом {client_address}')
+                self.all_clients.append(client)
+            except OSError:
+                pass
+
+            read_clients = []
+            write_clients = []
+            wait = 5
+            try:
+                read_clients, write_clients, [] = select.select(self.all_clients, self.all_clients, [], wait)
+            except:
+                pass
+
+            self.read_requests(read_clients)
+            if self.requests:
+                self.write_responses()
 
 
 def main():
-    
-    listen_port, listen_address = get_server_parameters()
-
-    logger.info(f'Запущен сервер, порт для подключений: {listen_port}, адрес: {listen_address}.')
-
-    transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        transport.bind((listen_address, listen_port))
-    except Exception as error:
-        logger.error(error)
-        sys.exit(1)
-
-    # Слушаем порт
-    transport.listen(MAX_CONNECTIONS)
-    transport.settimeout(1)
-
-    all_clients = []
-    requests = []
-
-    names = {}
-
-    while True:
-        try:
-            client, client_address = transport.accept()
-            logger.info(f'Установлено соединение с клиентом {client_address}')
-            all_clients.append(client)
-        except OSError as err:
-            pass
-
-        read_clients = []
-        write_clients = []
-        wait = 5
-        try:
-            read_clients, write_clients, [] = select.select(all_clients, all_clients, [], wait)
-        except:
-            pass
-
-        read_requests(read_clients, all_clients, names, requests)
-        if requests:
-            write_responses(write_clients, all_clients, names, requests)
+    server = Server(*get_server_parameters())
+    server.init_server()
+    server.main_loop()
 
 
 if __name__ == '__main__':
