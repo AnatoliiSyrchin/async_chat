@@ -16,6 +16,7 @@ def get_message(sock) -> dict:
     :return:
     '''
     encoded_response = sock.recv(MAX_PACKAGE_LENGTH)
+    logger.error(encoded_response)
     if isinstance(encoded_response, bytes):
         json_response = encoded_response.decode(ENCODING)
         response = json.loads(json_response)

@@ -68,7 +68,7 @@ class ServerStorage:
 
 
     def __init__(self, prefix=''):
-        self.engine = create_engine(f'sqlite:///{prefix}server.db', echo=False, pool_recycle=3600)
+        self.engine = create_engine(f'sqlite:///db/{prefix}server.db', echo=False, pool_recycle=3600)
         self.Base.metadata.create_all(self.engine)
 
         with Session(self.engine) as self.session:
