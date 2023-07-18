@@ -8,7 +8,7 @@ import logs.log_configs.server_log_config
 logger = logging.getLogger('app.server')
 
 @log
-def get_message(sock: socket) -> dict:
+def get_message(sock) -> dict:
     '''
     Утилита приёма и декодирования сообщения
     принимает байты выдаёт словарь, если принято что-то другое отдаёт ошибку значения
@@ -16,6 +16,7 @@ def get_message(sock: socket) -> dict:
     :return:
     '''
     encoded_response = sock.recv(MAX_PACKAGE_LENGTH)
+    logger.error(encoded_response)
     if isinstance(encoded_response, bytes):
         json_response = encoded_response.decode(ENCODING)
         response = json.loads(json_response)
@@ -26,7 +27,7 @@ def get_message(sock: socket) -> dict:
 
 
 @log
-def send_message(sock: socket, message: dict):
+def send_message(sock, message: dict):
     '''
     Утилита кодирования и отправки сообщения принимает словарь и отправляет его
     :param sock:
