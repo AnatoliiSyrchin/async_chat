@@ -1,136 +1,111 @@
-2023-07-17 22:05:01,042  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами ((), {}).Вызов произошел из функции main из модуля server.
-2023-07-17 22:05:01,043  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
-2023-07-17 22:05:01,294  INFO      server     Установлено соединение с клиентом ('127.0.0.1', 53807)
-2023-07-17 22:05:01,405  INFO      server     Установлено соединение с клиентом ('127.0.0.1', 53808)
-2023-07-17 22:05:01,406  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=668, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53807)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:01,406  ERROR     utils      b'{"action": "presence", "time": 1689620701.2947497, "user": {"account_name": "client_2"}}'
-2023-07-17 22:05:01,406  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53807) {'action': 'presence', 'time': 1689620701.2947497, 'user': {'account_name': 'client_2'}}
-2023-07-17 22:05:01,600  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=668, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53807)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:01,600  ERROR     utils      b'{"response": 200}'
- соединение с клиентом ('127.0.0.1', 53809)
-2023-07-17 22:05:01,600  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=680, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53808)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:01,600  ERROR     utils      b'{"action": "presence", "time": 1689620701.4052396, "user": {"account_name": "client_3"}}'
-2023-07-17 22:05:01,600  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53808) {'action': 'presence', 'time': 1689620701.4052396, 'user': {'account_name': 'client_3'}}
-2023-07-17 22:05:01,800  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=680, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53808)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:01,800  ERROR     utils      b'{"response": 200}'
-2023-07-17 22:05:01,801  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=692, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53809)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:01,801  ERROR     utils      b'{"action": "presence", "time": 1689620701.420636, "user": {"account_name": "client_1"}}'
-2023-07-17 22:05:01,801  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53809) {'action': 'presence', 'time': 1689620701.420636, 'user': {'account_name': 'client_1'}}
-2023-07-17 22:05:01,982  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=692, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53809)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:01,982  ERROR     utils      b'{"response": 200}'
-2023-07-17 22:05:02,997  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=668, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53807)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:02,997  ERROR     utils      b'{"action": "users_request", "time": 1689620701.6006644, "account_name": "client_2"}'
-2023-07-17 22:05:02,997  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53807) {'action': 'users_request', 'time': 1689620701.6006644, 'account_name': 'client_2'}
-2023-07-17 22:05:02,999  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=668, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53807)>, {'response': 202, 'all_users': ['client_2', 'client_3', 'client_1']}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:02,999  ERROR     utils      b'{"response": 202, "all_users": ["client_2", "client_3", "client_1"]}'
-2023-07-17 22:05:02,999  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=680, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53808)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:02,999  ERROR     utils      b'{"action": "users_request", "time": 1689620701.8011248, "account_name": "client_3"}'
-2023-07-17 22:05:02,999  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53808) {'action': 'users_request', 'time': 1689620701.8011248, 'account_name': 'client_3'}
-2023-07-17 22:05:03,000  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=680, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53808)>, {'response': 202, 'all_users': ['client_2', 'client_3', 'client_1']}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:03,000  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=692, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53809)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:03,000  ERROR     utils      b'{"response": 202, "all_users": ["client_2", "client_3", "client_1"]}'
- "client_1"}'
-2023-07-17 22:05:03,000  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53809) {'action': 'users_request', 'time': 1689620701.9824684, 'account_name': 'client_1'}
-2023-07-17 22:05:03,001  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=692, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53809)>, {'response': 202, 'all_users': ['client_2', 'client_3', 'client_1']}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:05:03,001  ERROR     utils      b'{"response": 202, "all_users": ["client_2", "client_3", "client_1"]}'
-2023-07-17 22:07:44,796  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами ((), {}).Вызов произошел из функции main из модуля server.
-2023-07-17 22:07:44,798  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
-2023-07-17 22:07:45,159  INFO      server     Установлено соединение с клиентом ('127.0.0.1', 53816)
-2023-07-17 22:07:45,159  INFO      server     Установлено соединение с клиентом ('127.0.0.1', 53817)
-2023-07-17 22:07:45,175  INFO      server     Установлено соединение с клиентом ('127.0.0.1', 53818)
-2023-07-17 22:07:45,176  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:45,176  ERROR     utils      b'{"action": "presence", "time": 1689620865.1591358, "user": {"account_name": "client_1"}}'
-2023-07-17 22:07:45,176  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53816) {'action': 'presence', 'time': 1689620865.1591358, 'user': {'account_name': 'client_1'}}
-2023-07-17 22:07:45,371  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:45,372  ERROR     utils      b'{"response": 200}'
-2023-07-17 22:07:45,372  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=612, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53817)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:45,372  ERROR     utils      b'{"action": "presence", "time": 1689620865.1591358, "user": {"account_name": "client_2"}}'
-2023-07-17 22:07:45,372  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53817) {'action': 'presence', 'time': 1689620865.1591358, 'user': {'account_name': 'client_2'}}
-2023-07-17 22:07:45,580  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=612, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53817)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:45,580  ERROR     utils      b'{"response": 200}'
-2023-07-17 22:07:46,594  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:46,594  ERROR     utils      b'{"action": "get_contacts", "time": 1689620865.372589, "account_name": "client_1"}'
-2023-07-17 22:07:46,594  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53816) {'action': 'get_contacts', 'time': 1689620865.372589, 'account_name': 'client_1'}
-2023-07-17 22:07:46,597  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>, {'response': 202, 'contacts': []}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:46,597  ERROR     utils      b'{"response": 202, "contacts": []}'
-2023-07-17 22:07:46,597  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=612, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53817)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:46,597  ERROR     utils      b'{"action": "get_contacts", "time": 1689620865.5808275, "account_name": "client_2"}'
-2023-07-17 22:07:46,597  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53817) {'action': 'get_contacts', 'time': 1689620865.5808275, 'account_name': 'client_2'}
-2023-07-17 22:07:46,598  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=612, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53817)>, {'response': 202, 'contacts': []}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:46,598  ERROR     utils      b'{"response": 202, "contacts": []}'
-2023-07-17 22:07:46,598  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=616, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53818)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:46,598  ERROR     utils      b'{"action": "presence", "time": 1689620865.1750429, "user": {"account_name": "client_3"}}'
-2023-07-17 22:07:46,598  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53818) {'action': 'presence', 'time': 1689620865.1750429, 'user': {'account_name': 'client_3'}}
-2023-07-17 22:07:46,830  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=616, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53818)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:46,830  ERROR     utils      b'{"response": 200}'
-2023-07-17 22:07:47,833  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=616, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53818)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:47,833  ERROR     utils      b'{"action": "get_contacts", "time": 1689620866.830643, "account_name": "client_3"}'
-2023-07-17 22:07:47,833  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53818) {'action': 'get_contacts', 'time': 1689620866.830643, 'account_name': 'client_3'}
-2023-07-17 22:07:47,833  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=616, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53818)>, {'response': 202, 'contacts': []}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:07:47,833  ERROR     utils      b'{"response": 202, "contacts": []}'
-2023-07-17 22:08:27,087  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:08:27,087  ERROR     utils      b'{"action": "users_request", "time": 1689620906.868496, "account_name": "client_1"}'
-2023-07-17 22:08:27,087  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53816) {'action': 'users_request', 'time': 1689620906.868496, 'account_name': 'client_1'}
-2023-07-17 22:08:27,087  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>, {'response': 202, 'all_users': ['client_1', 'client_2', 'client_3']}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:08:27,087  ERROR     utils      b'{"response": 202, "all_users": ["client_1", "client_2", "client_3"]}'
-2023-07-17 22:08:42,159  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:08:42,159  ERROR     utils      b'{"action": "add_contact", "time": 1689620921.5501587, "account_name": "client_1", "contact_name": "client_2"}'
-2023-07-17 22:08:42,159  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53816) {'action': 'add_contact', 'time': 1689620921.5501587, 'account_name': 'client_1', 'contact_name': 'client_2'}
-2023-07-17 22:08:42,284  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>, {'response': 200, 'add_contact': 'client_2'}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:08:42,284  ERROR     utils      b'{"response": 200, "add_contact": "client_2"}'
-2023-07-17 22:09:12,491  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:09:12,491  ERROR     utils      b'{"action": "message", "time": 1689620951.637665, "sender": "client_1", "recipient": "client_2", "text": "privet"}'
-2023-07-17 22:09:12,491  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53816) {'action': 'message', 'time': 1689620951.637665, 'sender': 'client_1', 'recipient': 'client_2', 'text': 'privet'}
-2023-07-17 22:09:12,584  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=612, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53817)>, {'action': 'message', 'time': 1689620951.637665, 'sender': 'client_1', 'recipient': 'client_2', 'text': 'privet'}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:09:12,584  ERROR     utils      b'{"action": "message", "time": 1689620951.637665, "sender": "client_1", "recipient": "client_2", "text": "privet"}'
-2023-07-17 22:09:59,749  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=612, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53817)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:09:59,749  ERROR     utils      b'{"action": "exit", "time": 1689620999.4054053, "user": {"account_name": "client_2"}}'
-2023-07-17 22:09:59,749  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53817) {'action': 'exit', 'time': 1689620999.4054053, 'user': {'account_name': 'client_2'}}
-2023-07-17 22:09:59,874  ERROR     utils      b''
-2023-07-17 22:10:08,921  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=636, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53816)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:10:08,921  ERROR     utils      b'{"action": "exit", "time": 1689621008.733831, "user": {"account_name": "client_1"}}'
-2023-07-17 22:10:08,921  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53816) {'action': 'exit', 'time': 1689621008.733831, 'user': {'account_name': 'client_1'}}
-2023-07-17 22:10:09,030  ERROR     utils      b''
-2023-07-17 22:10:21,119  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=616, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53818)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:10:21,228  INFO      server     Соединение с клиентом client_3 потеряно
-2023-07-17 22:15:24,040  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами ((), {}).Вызов произошел из функции main из модуля server.
-2023-07-17 22:15:24,040  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
-2023-07-17 22:15:24,055  INFO      server     Установлено соединение с клиентом ('127.0.0.1', 53833)
-2023-07-17 22:15:24,055  INFO      server     Установлено соединение с клиентом ('127.0.0.1', 53834)
-2023-07-17 22:15:24,494  INFO      server     Установлено соединение с клиентом ('127.0.0.1', 53832)
-2023-07-17 22:15:24,495  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=548, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53833)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:24,495  ERROR     utils      b'{"action": "presence", "time": 1689621324.0551283, "user": {"account_name": "client_3"}}'
-2023-07-17 22:15:24,495  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53833) {'action': 'presence', 'time': 1689621324.0551283, 'user': {'account_name': 'client_3'}}
-2023-07-17 22:15:24,598  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=548, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53833)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:24,598  ERROR     utils      b'{"response": 200}'
-2023-07-17 22:15:24,598  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=580, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53834)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:24,598  ERROR     utils      b'{"action": "presence", "time": 1689621324.0551283, "user": {"account_name": "client_2"}}'
-2023-07-17 22:15:24,598  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53834) {'action': 'presence', 'time': 1689621324.0551283, 'user': {'account_name': 'client_2'}}
-2023-07-17 22:15:24,708  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=580, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53834)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:24,708  ERROR     utils      b'{"response": 200}'
-2023-07-17 22:15:25,720  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=548, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53833)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:25,720  ERROR     utils      b'{"action": "get_contacts", "time": 1689621324.5986538, "account_name": "client_3"}'
-2023-07-17 22:15:25,720  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53833) {'action': 'get_contacts', 'time': 1689621324.5986538, 'account_name': 'client_3'}
-2023-07-17 22:15:25,723  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=548, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53833)>, {'response': 202, 'contacts': []}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:25,723  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=580, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53834)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:25,723  ERROR     utils      b'{"response": 202, "contacts": []}'
-689621324.7080023, "account_name": "client_2"}'
-2023-07-17 22:15:25,723  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53834) {'action': 'get_contacts', 'time': 1689621324.7080023, 'account_name': 'client_2'}
-2023-07-17 22:15:25,724  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=580, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53834)>, {'response': 202, 'contacts': []}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:25,724  ERROR     utils      b'{"response": 202, "contacts": []}'
-2023-07-17 22:15:25,724  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=656, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53832)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:25,724  ERROR     utils      b'{"action": "presence", "time": 1689621324.4944794, "user": {"account_name": "client_1"}}'
-2023-07-17 22:15:25,724  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53832) {'action': 'presence', 'time': 1689621324.4944794, 'user': {'account_name': 'client_1'}}
-2023-07-17 22:15:25,846  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=656, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53832)>, {'response': 200}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:25,846  ERROR     utils      b'{"response": 200}'
-2023-07-17 22:15:26,851  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=656, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53832)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:26,851  ERROR     utils      b'{"action": "get_contacts", "time": 1689621325.846047, "account_name": "client_1"}'
-2023-07-17 22:15:26,851  INFO      server     Получили сообщение от клиента ('127.0.0.1', 53832) {'action': 'get_contacts', 'time': 1689621325.846047, 'account_name': 'client_1'}
-2023-07-17 22:15:26,851  DEBUG     server     Вызов функции send_message из модуля common.utils с параметрами ((<socket.socket fd=656, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53832)>, {'response': 202, 'contacts': ['client_2']}), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:15:26,851  ERROR     utils      b'{"response": 202, "contacts": ["client_2"]}'
-2023-07-17 22:16:10,193  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=548, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53833)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:16:10,310  INFO      server     Соединение с клиентом client_3 потеряно
-2023-07-17 22:16:20,401  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=580, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53834)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:16:20,510  INFO      server     Соединение с клиентом client_2 потеряно
-2023-07-17 22:16:31,628  DEBUG     server     Вызов функции get_message из модуля common.utils с параметрами ((<socket.socket fd=656, family=AddressFamily.AF_INET, type=SocketKind.SOCK_STREAM, proto=0, laddr=('127.0.0.1', 7777), raddr=('127.0.0.1', 53832)>,), {}).Вызов произошел из функции self._bootstrap_inner из модуля server.
-2023-07-17 22:16:31,737  INFO      server     Соединение с клиентом client_1 потеряно
+2023-07-24 22:55:16,456  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 22:55:16,596  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:06:11,512  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:06:11,637  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:13:58,514  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:13:58,623  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:16:12,003  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:16:12,129  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:16:19,510  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:16:19,651  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:16:27,578  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:16:27,704  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:19:37,085  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:19:37,210  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:22:05,141  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:22:05,251  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:25:04,054  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:25:04,355  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:25:04,447  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:25:58,334  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:25:58,663  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:25:58,742  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:28:03,430  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:28:03,735  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:28:03,826  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:29:48,076  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:29:48,382  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:29:48,474  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:41:21,084  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:41:21,667  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:41:21,759  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:43:21,307  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:43:21,699  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:43:21,789  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:44:33,431  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:44:33,847  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:44:33,938  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:45:39,776  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:45:39,905  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:46:08,166  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:46:08,278  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:46:17,839  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:46:41,849  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:46:41,977  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:46:45,748  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции listen_address, из модуля server.
+2023-07-24 23:47:37,944  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:47:38,376  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:51:18,511  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:51:18,962  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:52:28,953  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:52:29,411  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-24 23:57:15,537  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-24 23:57:15,985  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:00:18,350  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:00:18,810  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:00:43,989  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:00:44,435  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:13:05,460  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:13:05,960  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:14:44,484  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:14:44,941  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:16:05,006  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:16:05,424  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:26:56,589  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:26:57,018  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:27:13,433  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:27:13,884  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:27:18,246  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:27:18,658  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:28:04,131  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:28:04,559  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:30:52,604  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:30:53,037  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:34:56,274  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:34:56,691  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:39:20,135  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:39:20,560  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:39:44,525  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:39:44,944  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:40:59,770  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:41:00,192  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:41:48,617  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:41:49,049  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:45:43,000  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:45:43,444  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:47:25,430  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:47:25,892  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:54:31,453  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:54:31,883  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:55:08,775  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:55:09,182  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:55:57,872  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:55:58,281  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:56:57,776  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:56:58,180  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 00:57:19,687  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('7777', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 00:57:20,105  INFO      server     Запущен сервер, порт для подключений: 7777, адрес: 
+2023-07-25 01:01:22,388  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('8888', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 01:01:22,792  INFO      server     Запущен сервер, порт для подключений: 8888, адрес: 
+2023-07-25 01:04:40,182  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('8888', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 01:04:40,604  INFO      server     Запущен сервер, порт для подключений: 8888, адрес: 
+2023-07-25 01:09:01,251  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('8888', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 01:09:01,665  INFO      server     Запущен сервер, порт для подключений: 8888, адрес: 
+2023-07-25 01:09:51,270  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('8888', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 01:09:51,689  INFO      server     Запущен сервер, порт для подключений: 8888, адрес: 
+2023-07-25 01:10:44,699  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('8888', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 01:10:45,129  INFO      server     Запущен сервер, порт для подключений: 8888, адрес: 
+2023-07-25 01:12:54,592  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('8888', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 01:12:54,993  INFO      server     Запущен сервер, порт для подключений: 8888, адрес: 
+2023-07-25 01:15:47,356  DEBUG     server     Вызов функции get_server_parameters из модуля server с параметрами (('8888', ''), {}).Вызов произошел из функции main из модуля server.
+2023-07-25 01:15:47,756  INFO      server     Запущен сервер, порт для подключений: 8888, адрес: 

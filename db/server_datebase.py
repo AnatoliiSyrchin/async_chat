@@ -1,4 +1,5 @@
 
+import os
 from sqlalchemy.orm import Session, Mapped, DeclarativeBase, mapped_column, relationship
 from sqlalchemy import create_engine, String, select, ForeignKey
 from datetime import datetime
@@ -61,14 +62,14 @@ class ServerStorage:
 
         id: Mapped[int] = mapped_column(primary_key=True)
         user_id: Mapped[int] = mapped_column(ForeignKey('all_users.id'))
-        send: Mapped[int] = mapped_column(default=0)
+        sent: Mapped[int] = mapped_column(default=0)
         received: Mapped[int] = mapped_column(default=0)
 
         user: Mapped["AllUsers"] = relationship(back_populates="event_user")
 
+    def __init__(self, path, prefix=''):
 
-    def __init__(self, prefix=''):
-        self.engine = create_engine(f'sqlite:///db/{prefix}server.db', echo=False, pool_recycle=3600)
+        self.engine = create_engine(f'sqlite:///{path}', echo=False, pool_recycle=3600, connect_args={'check_same_thread': False})
         self.Base.metadata.create_all(self.engine)
 
         with Session(self.engine) as self.session:
@@ -88,10 +89,7 @@ class ServerStorage:
             events_history_user = self.UsersEventsHistory(user_id=user.id)
             self.session.add(events_history_user)
 
-
         active_user = self.ActiveUsers(user_id=user.id, ip_address=ip_address, port=port, login_time=login_time)
-        self.session.add(active_user)
-
         history_user = self.LoginHistory(user_id=user.id, ip_address=ip_address, port=port, login_time=login_time)
         self.session.add_all((active_user, history_user))
 
@@ -129,7 +127,7 @@ class ServerStorage:
 
         self.session.scalar(select(self.UsersEventsHistory)
                             .join(self.UsersEventsHistory.user)
-                            .where(self.AllUsers.username == sender)).send += 1
+                            .where(self.AllUsers.username == sender)).sent += 1
 
         self.session.scalar(select(self.UsersEventsHistory)
                             .join(self.UsersEventsHistory.user)
@@ -178,7 +176,8 @@ class ServerStorage:
 
 
 if __name__ == '__main__':
-    server_base = ServerStorage(prefix='test_')
+    print(os.path.join(os.path.dirname(os.path.realpath(__file__))), ('test_server.db'))
+    server_base = ServerStorage(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_server.db'))
     server_base.user_login('alesha', '127.0.0.1', 7000)
     server_base.user_login('masha', '127.0.0.2', 5000)
     print('all clients')
@@ -210,7 +209,7 @@ if __name__ == '__main__':
     print('alesha send message to masha')
     server_base.process_message('alesha', 'masha')
     for client in server_base.users_events_history():
-        print(f'User {client.user.username} sent {client.send} messages, received {client.received}')
+        print(f'User {client.user.username} sent {client.sent} messages, received {client.received}')
     print()
 
 

@@ -1,10 +1,14 @@
+import os
 import sys
 import socket
 import json
 import logging
 import select
 import argparse
+import configparser
 from threading import Thread
+
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 import logs.log_configs.server_log_config
 from common.variables import DEFAULT_PORT, MAX_CONNECTIONS, ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME,\
@@ -15,6 +19,9 @@ from common.decorators import log
 from common.descriptors import Port
 from common.metaclasses import ServerVerifier
 from db.server_datebase import ServerStorage
+
+from server_gui import MyMainWindow, ServerSettings, HistoryList, UsersList
+from PyQt5.QtWidgets import QMessageBox, QApplication
 
 
 AVAILABLE_COMMANDS = 'available commands:\n'\
@@ -28,7 +35,7 @@ logger = logging.getLogger('app.server')
 
 
 @log
-def get_server_parameters():
+def get_server_parameters(port=str(DEFAULT_PORT), address=''):
     """
     Загрузка параметров командной строки,
     если нет параметров, то задаём значения по умолчанию.
@@ -36,8 +43,8 @@ def get_server_parameters():
     """
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p', '--port', default=DEFAULT_PORT, type=int, nargs='?')
-    parser.add_argument('-a', '--address', default='', nargs='?')
+    parser.add_argument('-p', '--port', default=int(port), type=int, nargs='?')
+    parser.add_argument('-a', '--address', default=address, nargs='?')
     namespace = parser.parse_args(sys.argv[1:])
 
     return namespace.address, namespace.port
@@ -188,43 +195,149 @@ class Server(metaclass=ServerVerifier):
                 self.write_responses()
 
 
-def print_help():
-    print(AVAILABLE_COMMANDS)
+def server_config(config_tab, config):
+
+    config_tab.select_base_path.insert(config['SETTINGS']['database_path'])
+    config_tab.filename_field.insert(config['SETTINGS']['database_file'])
+    config_tab.port_field.insert(config['SETTINGS']['default_port'])
+    config_tab.ip_field.insert(config['SETTINGS']['listen_address'])
+    config_tab.save_button.clicked.connect(lambda: save_server_config(config_tab))
+
+
+def save_server_config(config_tab, config):
+
+    message = QMessageBox()
+    config['SETTINGS']['Database_path'] = config_tab.select_base_path.text()
+    config['SETTINGS']['Database_file'] = config_tab.filename_field.text()
+    try:
+        port = int(config_tab.port_field.text())
+    except ValueError:
+        message.warning(config_tab, 'Ошибка', 'Порт должен быть числом')
+    else:
+        config['SETTINGS']['Listen_Address'] = config_tab.ip_field.text()
+        if 1023 < port < 65536:
+            config['SETTINGS']['Default_port'] = str(port)
+            with open('server.ini', 'w') as conf:
+                config.write(conf)
+                message.information(
+                    config_tab, 'OK', 'Настройки успешно сохранены!')
+        else:
+            message.warning(
+                config_tab,
+                'Ошибка',
+                'Порт должен быть от 1024 до 65536')
+
+
+def create_history_model(database):
+    hist_list = database.users_events_history()
+
+    list_model = QStandardItemModel()
+    list_model.setHorizontalHeaderLabels(
+        ['Client name', 'Last visit', 'Messages sent', 'Messages received'])
+    for user in hist_list:
+        username = user.user.username
+        login_time = user.user.last_login.strftime("%d.%m.%Y %H:%M")
+        sent = str(user.sent)
+        received = str(user.received)
+
+        user = QStandardItem(username)
+        user.setEditable(False)
+        last_seen = QStandardItem(login_time)
+        last_seen.setEditable(False)
+        sent = QStandardItem(str(sent))
+        sent.setEditable(False)
+        recvd = QStandardItem(str(received))
+        recvd.setEditable(False)
+        list_model.appendRow([user, last_seen, sent, recvd])
+    return list_model
+
+
+def create_users_model(database):
+    active_users = database.show_active_users()
+    list_model = QStandardItemModel()
+    list_model.setHorizontalHeaderLabels(['Client name', 'IP Adress', 'Port', 'Connection time'])
+    for user in active_users:
+        username = user.user.username
+        ip_address = user.ip_address
+        port = str(user.port)
+        login_time = user.login_time.strftime("%d.%m.%Y %H:%M")
+
+        user = QStandardItem(username)
+        user.setEditable(False)
+        ip = QStandardItem(ip_address)
+        ip.setEditable(False)
+        port = QStandardItem(str(port))
+        port.setEditable(False)
+        time = QStandardItem(login_time)
+        time.setEditable(False)
+
+        list_model.appendRow([user, ip, port, time])
+    return list_model
+
+
+def refresh_tab(window, base, config, index):
+    if index == 0:
+        window.tab_1.table.setModel(create_users_model(base))
+        window.tab_1.table.resizeColumnsToContents()
+
+    if index == 1:
+        window.tab_2.table.setModel(create_history_model(base))
+        window.tab_2.table.resizeColumnsToContents()
+
+    if index == 2:
+        server_config(window.tab_3, config)
 
 
 def main():
-    server_base = ServerStorage()
 
-    server = Server(*get_server_parameters(), server_base)
+    config = configparser.ConfigParser()
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    config.read(f"{dir_path}/{'server.ini'}")
+    listen_address, listen_port = get_server_parameters(config['SETTINGS']['Default_port'],
+                                                        config['SETTINGS']['Listen_Address'])
+    server_base = ServerStorage(
+        os.path.join(
+            config['SETTINGS']['Database_path'],
+            config['SETTINGS']['Database_file']))
+
+    # data for tests
+    server_base.user_login('alesha', '127.0.0.1', 7000)
+    server_base.user_login('masha', '127.0.0.2', 5000)
+    server_base.process_message('alesha', 'masha')
+
+    server = Server(listen_address, listen_port, server_base)
     server.init_server()
     server_thread = Thread(target=server.main_loop)
     server_thread.daemon = True
     server_thread.start()
 
-    print_help()
+    server_app = QApplication(sys.argv)
+    main_window = MyMainWindow()
 
-    while True:
-        command = input('Введите комманду: ')
-        if command == 'help':
-            print_help()
-        elif command == 'exit':
-            break
-        elif command == 'users':
-            for client in server_base.get_all_users():
-                print(f'User {client.username}, last_login {client.last_login.strftime("%d.%m.%Y %H:%M")}')
-        elif command == 'connected':
-            for client in server_base.show_active_users():
-                print(f'User {client.user.username} connected at {client.login_time.strftime("%d.%m.%Y %H:%M")} '
-                      f'from {client.ip_address}:{client.port}')
+    main_window.statusBar().showMessage('Server Working')
 
-        elif command == 'loghist':
-            name = input('Enter the username to view users history or press Enter for all history: ')
-            for client in server_base.login_history(name):
-                print(f'User {client.user.username} connected at {client.login_time.strftime("%d.%m.%Y %H:%M")} '
-                      f'from {client.ip_address}:{client.port}')
-        else:
-            print('Команда не распознана.')
+    # обновляем картинку на активной вкладке
+    refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex())
 
+    main_window.show()
+
+
+    # timer = QTimer()
+    # timer.timeout.connect(list_update)
+    # timer.start(1000)
+
+    main_window.tab_1.refresh_button.clicked.connect(
+        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex()))
+
+    main_window.tab_2.refresh_button.clicked.connect(
+        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex()))
+
+    main_window.tab_widget.currentChanged.connect(
+        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex()))
+
+    # Запускаем GUI
+    server_app.exec_()
 
 
 if __name__ == '__main__':
