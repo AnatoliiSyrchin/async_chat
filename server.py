@@ -6,7 +6,7 @@ import logging
 import select
 import argparse
 import configparser
-from threading import Thread
+from threading import Thread, Lock
 
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
@@ -32,6 +32,7 @@ AVAILABLE_COMMANDS = 'available commands:\n'\
     'exit - close program'
 
 logger = logging.getLogger('app.server')
+socket_lock = Lock()
 
 
 @log
@@ -101,22 +102,24 @@ class Server(metaclass=ServerVerifier):
             return
 
         elif ACTION in message and message[ACTION] == EXIT and TIME in message and \
-                USER in message and ACCOUNT_NAME in message[USER]:
-            del self.names[message[USER][ACCOUNT_NAME]]
+                ACCOUNT_NAME in message:
+            del self.names[message[ACCOUNT_NAME]]
             self.all_clients.remove(sock)
-            self.server_base.user_logout(message[USER][ACCOUNT_NAME])
+            self.server_base.user_logout(message[ACCOUNT_NAME])
             sock.close()
             return
 
         elif ACTION in message and message[ACTION] == MESSAGE and TIME in message and \
                 SENDER in message and RECIPIENT in message and TEXT in message:
             self.requests.append((sock, message))
+            logger.info(f'recived message {RECIPIENT}, {message}')
             self.server_base.process_message(message[SENDER], message[RECIPIENT])
+            send_message(sock, {RESPONSE: 200})
             return
         
-        elif ACTION in message and message[ACTION] == GET_CONTACTS and ACCOUNT_NAME in message and \
-                self.names[message[ACCOUNT_NAME]] == sock:
-            contacts = self.server_base.get_contacts(message[ACCOUNT_NAME])
+        elif ACTION in message and message[ACTION] == GET_CONTACTS and USER in message and \
+                self.names[message[USER]] == sock:
+            contacts = self.server_base.get_contacts(message[USER])
             send_message(sock, {RESPONSE: 202, CONTACTS: contacts})
 
         elif ACTION in message and message[ACTION] == ADD_CONTACT and CONTACT_NAME in message and \
@@ -160,9 +163,13 @@ class Server(metaclass=ServerVerifier):
             sock, message = self.requests.pop()
             recipient = message[RECIPIENT]
             if recipient in self.names:
+                logger.info('recipient in self.names')
                 recipient_socket = self.names[recipient]
+                logger.info(f'recipient socket {self.names[recipient]}')
                 try:
-                    send_message(recipient_socket, message)
+                    with socket_lock:
+                        logger.info(f'trying to send message {recipient} {message}')
+                        send_message(recipient_socket, message)
                 except ConnectionError:
                     self.all_clients.remove(recipient_socket)
                     del self.names[recipient]
@@ -170,7 +177,6 @@ class Server(metaclass=ServerVerifier):
             else:
                 send_message(sock, {RESPONSE: 400, ERROR: f'account name {recipient} does not exist'})
                 logger.info(f'Клиент с именем {recipient} не существует')
-
 
     def main_loop(self):
         while True:
@@ -195,16 +201,16 @@ class Server(metaclass=ServerVerifier):
                 self.write_responses()
 
 
-def server_config(config_tab, config):
+def server_config(config_tab, config, server):
 
-    config_tab.select_base_path.insert(config['SETTINGS']['database_path'])
-    config_tab.filename_field.insert(config['SETTINGS']['database_file'])
-    config_tab.port_field.insert(config['SETTINGS']['default_port'])
-    config_tab.ip_field.insert(config['SETTINGS']['listen_address'])
-    config_tab.save_button.clicked.connect(lambda: save_server_config(config_tab))
+    config_tab.select_base_path.setText(config['SETTINGS']['database_path'])
+    config_tab.filename_field.setText(config['SETTINGS']['database_file'])
+    config_tab.port_field.setText(config['SETTINGS']['default_port'])
+    config_tab.ip_field.setText(config['SETTINGS']['listen_address'])
+    config_tab.save_button.clicked.connect(lambda: save_server_config(config_tab, config, server))
 
 
-def save_server_config(config_tab, config):
+def save_server_config(config_tab, config, server):
 
     message = QMessageBox()
     config['SETTINGS']['Database_path'] = config_tab.select_base_path.text()
@@ -212,20 +218,25 @@ def save_server_config(config_tab, config):
     try:
         port = int(config_tab.port_field.text())
     except ValueError:
-        message.warning(config_tab, 'Ошибка', 'Порт должен быть числом')
+        message.warning(config_tab, 'Error', 'Port must be an integer')
     else:
         config['SETTINGS']['Listen_Address'] = config_tab.ip_field.text()
         if 1023 < port < 65536:
             config['SETTINGS']['Default_port'] = str(port)
             with open('server.ini', 'w') as conf:
                 config.write(conf)
-                message.information(
-                    config_tab, 'OK', 'Настройки успешно сохранены!')
+                path = os.path.join(
+                    config['SETTINGS']['Database_path'],
+                    config['SETTINGS']['Database_file'])
+                server.server_base = ServerStorage(path)
+                message.setText('Settings successfully saved!')
+                message.setIcon(QMessageBox.Information)
+                message.exec_()
         else:
             message.warning(
                 config_tab,
-                'Ошибка',
-                'Порт должен быть от 1024 до 65536')
+                'Error',
+                'Port must be from 1024 to 65536')
 
 
 def create_history_model(database):
@@ -275,17 +286,19 @@ def create_users_model(database):
     return list_model
 
 
-def refresh_tab(window, base, config, index):
+def refresh_tab(window, base, config, index, server=None):
     if index == 0:
-        window.tab_1.table.setModel(create_users_model(base))
+        window.tab_1.table.setModel(create_users_model(server.server_base))
         window.tab_1.table.resizeColumnsToContents()
+        window.tab_1.table.resizeRowsToContents()
 
     if index == 1:
-        window.tab_2.table.setModel(create_history_model(base))
+        window.tab_2.table.setModel(create_history_model(server.server_base))
         window.tab_2.table.resizeColumnsToContents()
+        window.tab_2.table.resizeRowsToContents()
 
     if index == 2:
-        server_config(window.tab_3, config)
+        server_config(window.tab_3, config, server)
 
 
 def main():
@@ -296,15 +309,15 @@ def main():
     config.read(f"{dir_path}/{'server.ini'}")
     listen_address, listen_port = get_server_parameters(config['SETTINGS']['Default_port'],
                                                         config['SETTINGS']['Listen_Address'])
-    server_base = ServerStorage(
-        os.path.join(
-            config['SETTINGS']['Database_path'],
-            config['SETTINGS']['Database_file']))
+
+    path_to_base_dir = config['SETTINGS']['Database_path'] or os.path.join(dir_path, 'db')
+    path = os.path.join(path_to_base_dir, config['SETTINGS']['Database_file'])
+    server_base = ServerStorage(path)
 
     # data for tests
-    server_base.user_login('alesha', '127.0.0.1', 7000)
-    server_base.user_login('masha', '127.0.0.2', 5000)
-    server_base.process_message('alesha', 'masha')
+    # server_base.user_login('alesha', '127.0.0.1', 7000)
+    # server_base.user_login('masha', '127.0.0.2', 5000)
+    # server_base.process_message('alesha', 'masha')
 
     server = Server(listen_address, listen_port, server_base)
     server.init_server()
@@ -317,26 +330,25 @@ def main():
 
     main_window.statusBar().showMessage('Server Working')
 
-    # обновляем картинку на активной вкладке
-    refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex())
+    # refresh widget on active tab
+    refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex(), server)
 
     main_window.show()
-
 
     # timer = QTimer()
     # timer.timeout.connect(list_update)
     # timer.start(1000)
 
     main_window.tab_1.refresh_button.clicked.connect(
-        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex()))
+        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex(), server))
 
     main_window.tab_2.refresh_button.clicked.connect(
-        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex()))
+        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex(), server))
 
     main_window.tab_widget.currentChanged.connect(
-        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex()))
+        lambda: refresh_tab(main_window, server_base, config, main_window.tab_widget.currentIndex(), server))
 
-    # Запускаем GUI
+    # Start GUI
     server_app.exec_()
 
 

@@ -1,5 +1,5 @@
 # Порт по умолчанию для сетевого ваимодействия
-DEFAULT_PORT = 7777
+DEFAULT_PORT = 7000
 
 # IP адрес по умолчанию для подключения клиента
 DEFAULT_IP_ADDRESS = '127.0.0.1'
@@ -36,3 +36,5 @@ ADD_CONTACT = 'add_contact'
 REMOVE_CONTACT = 'remove_contact'
 USERS_REQUEST = 'users_request'
 CONTACT_NAME = 'contact_name'
+DESTINATION = 'destination'
+LIST_INFO = 'list_info'

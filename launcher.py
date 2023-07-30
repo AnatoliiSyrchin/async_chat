@@ -6,18 +6,8 @@ python = sys.executable
 
 PROCESS = []
 
-while True:
+PROCESS.append(subprocess.Popen(f'{python} server.py', creationflags=subprocess.CREATE_NEW_CONSOLE))
+for i in range(2):
+    PROCESS.append(subprocess.Popen(f'{python} client.py -n user_{i + 1}',
+                                    creationflags=subprocess.CREATE_NEW_CONSOLE))
 
-    ANSWER = input('Выберите действие: q - выход, s - запустить сервер и клиенты, x - закрыть все окна: ')
-
-    if ANSWER == 'q':
-        break
-    elif ANSWER == 's':
-        PROCESS.append(subprocess.Popen(f'{python} server.py', creationflags=subprocess.CREATE_NEW_CONSOLE))
-        for i in range(3):
-            PROCESS.append(subprocess.Popen(f'{python} client.py -n client_{i + 1}',
-                                            creationflags=subprocess.CREATE_NEW_CONSOLE))
-    elif ANSWER == 'x':
-        while PROCESS:
-            VICTIM = PROCESS.pop()
-            VICTIM.kill()

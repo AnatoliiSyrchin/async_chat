@@ -1,6 +1,6 @@
 
 from sqlalchemy.orm import Session, Mapped, DeclarativeBase, mapped_column, relationship
-from sqlalchemy import create_engine, String, select, ForeignKey
+from sqlalchemy import create_engine, String, select, ForeignKey, or_
 from datetime import datetime
 
 
@@ -31,11 +31,10 @@ class ClientStorage:
         __tablename__ = 'message_history'
 
         id: Mapped[int] = mapped_column(primary_key=True)
-        from_user: Mapped[str] = mapped_column(String(30))
-        to_user: Mapped[str] = mapped_column(String(30))
+        contact: Mapped[str] = mapped_column(String(30))
+        direction: Mapped[str] = mapped_column(String(3))
         message: Mapped[str]
         date: Mapped[datetime] = mapped_column(default=datetime.now())
-
 
     def __init__(self, prefix=''):
         self.engine = create_engine(f'sqlite:///db/{prefix}client.db', echo=False, pool_recycle=3600)
@@ -46,6 +45,7 @@ class ClientStorage:
             self.session.commit()
 
     def fill_all_users(self, users):
+        self.session.query(self.AllUsers).delete()
         all_users = []
         for username in users:
             all_users.append(self.AllUsers(username=username))
@@ -74,16 +74,17 @@ class ClientStorage:
     def check_user(self, username):
         return bool(self.session.scalar(select(self.AllUsers).where(self.AllUsers.username == username)))
     
-    def save_message(self, from_user, to_user, message):
-        self.session.add(self.MessageHistory(from_user=from_user, to_user=to_user, message=message))
+    def check_contact(self, username):
+        return bool(self.session.scalar(select(self.Contacts).where(self.Contacts.username == username)))
+    
+    def save_message(self, contact, direction, message):
+        self.session.add(self.MessageHistory(contact=contact, direction=direction, message=message))
         self.session.commit()
     
-    def get_message_history(self, from_user=None, to_user=None):
+    def get_message_history(self, contact=None):
         query = select(self.MessageHistory)
-        if from_user:
-            return self.session.scalars(query.where(self.MessageHistory.from_user == from_user))
-        elif to_user:
-            return self.session.scalars(query.where(self.MessageHistory.to_user == to_user))
+        if contact:
+            return self.session.scalars(query.where(self.MessageHistory.contact == contact))
         else:
             return self.session.scalars(query)
 
@@ -100,26 +101,29 @@ if __name__ == '__main__':
     print('added contacts oleg, dmitriy')
     client_datebase.add_contact('oleg')
     client_datebase.add_contact('dmitriy')
+    
 
     print('contacts in base:')
     print(f'{", ".join(client_datebase.get_contacts())}')
     print()
 
-    print('anna send message to dmitriy')
-    client_datebase.save_message('anna', 'dmitriy', 'privet')
-    print('oleg send message to anna')
-    client_datebase.save_message('oleg', 'anna', 'privet')
-    print('anna send message to oleg')
-    client_datebase.save_message('anna', 'oleg', 'privet')
+    print('test_client received message from anna')
+    client_datebase.save_message('anna', 'in', 'privet')
+    print('test_client received message from oleg')
+    client_datebase.save_message('oleg', 'in', 'privet')
+    print('test_client send message to anna')
+    client_datebase.save_message('anna', 'out', 'privet')
+    print('test_client send message to dmitriy')
+    client_datebase.save_message('dmitriy', 'out', 'privet')
     print()
 
     print('all message history')
     for message in client_datebase.get_message_history():
-        print(f'From user {message.from_user}, to user: {message.to_user}, message: {message.message}')
+        print(f'with user {message.contact}, direction: {message.direction}, message: {message.message}')
     
     print('message history from anna')
-    for message in client_datebase.get_message_history(from_user='anna'):
-        print(f'From user {message.from_user}, to user: {message.to_user}, message: {message.message}')
+    for message in client_datebase.get_message_history(contact='anna'):
+        print(f'with user {message.contact}, direction: {message.direction}, message: {message.message}')
     print()
     
     print('removed contact oleg')
