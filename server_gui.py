@@ -23,11 +23,16 @@ class MyMainWindow(QMainWindow):
 
     def __init__(self):
         super(MyMainWindow, self).__init__()
+        # self.width = display_size.width()
+        # self.height = display_size.height()
 
-        self.resize(450, 320)
+        # self.resize(600, 300)
+        # self.move(600, 600)
+        # self.setGeometry(self.width // 2 - 300, self.height // 3 - 150, 600, 300)
+        self.setGeometry(500, 500, 900, 400)
         self.setWindowTitle('Main window')
 
-        self.exit_action = QAction('Выход', self)
+        self.exit_action = QAction('Exit', self)
         self.exit_action.setShortcut('Ctrl+Q')
         self.exit_action.triggered.connect(qApp.quit)
 
@@ -94,53 +99,52 @@ class ServerSettings(QWidget):
         self.layout = QVBoxLayout()
 
         self.select_base_text = QLabel('Enter location of the data base', self)
-        self.select_base_text.setGeometry(QRect(20, 20, 220, 20))
+        self.select_base_text.setGeometry(20, 20, 220, 20)
         self.select_base_text.setFont(self.FONT)
 
         self.select_base_path = QLineEdit(self)
-        self.select_base_path.setGeometry(QRect(20, 40, 250, 20))
+        self.select_base_path.setGeometry(20, 40, 250, 20)
         self.select_base_path.setFont(self.FONT)
 
         self.select_base_button = QPushButton('Select...', self)
-        self.select_base_button.setGeometry(QRect(280, 39, 100, 22))
+        self.select_base_button.setGeometry(280, 39, 100, 22)
         self.select_base_button.setFont(self.FONT)
 
         self.select_base_button.clicked.connect(self.open_file_dialog)
 
         self.filename = QLabel('Enter data base filename', self)
-        self.filename.setGeometry(QRect(20, 80, 180, 20))
+        self.filename.setGeometry(20, 80, 180, 20)
         self.filename.setFont(self.FONT)
 
         self.filename_field = QLineEdit(self)
-        self.filename_field.setGeometry(QRect(210, 80, 170, 20))
+        self.filename_field.setGeometry(210, 80, 170, 20)
         self.filename_field.setFont(self.FONT)
 
         self.ip_text = QLabel('Enter IP address', self)
-        self.ip_text.setGeometry(QRect(20, 120, 180, 20))
+        self.ip_text.setGeometry(20, 120, 180, 20)
         self.ip_text.setFont(self.FONT)
 
         self.ip_field = QLineEdit(self)
-        self.ip_field.setGeometry(QRect(210, 120, 170, 20))
+        self.ip_field.setGeometry(210, 120, 170, 20)
         self.ip_field.setFont(self.FONT)
 
         self.port_text = QLabel('Enter Port', self)
-        self.port_text.setGeometry(QRect(20, 160, 180, 20))
+        self.port_text.setGeometry(20, 160, 180, 20)
         self.port_text.setFont(self.FONT)
 
         self.port_field = QLineEdit(self)
-        self.port_field.setGeometry(QRect(210, 160, 170, 20))
+        self.port_field.setGeometry(210, 160, 170, 20)
         self.port_field.setFont(self.FONT)
 
         self.save_button = QPushButton('Save', self)
-        self.save_button.setGeometry(QRect(280, 200, 100, 22))
+        self.save_button.setGeometry(280, 200, 100, 22)
 
     @pyqtSlot()
     def open_file_dialog(self):
         dialog = QFileDialog(self)
         path = dialog.getExistingDirectory()
-        path = path.replace('/', '\\')
-        print(path)
-        self.select_base_path.insert(path)
+        # path = path.replace('/', '\\')
+        self.select_base_path.setText(path)
 
 
 if __name__ == '__main__':
@@ -149,7 +153,7 @@ if __name__ == '__main__':
     server_base.user_login('masha', '127.0.0.2', 5000)
     
     app = QApplication(sys.argv)
-    app.setStyle('Breeze')
+    # display_size = app.primaryScreen().size()
     ex = MyMainWindow()
     ex.show()
     sys.exit(app.exec_())

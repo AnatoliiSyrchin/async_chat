@@ -3,7 +3,7 @@ import sys
 import traceback
 import logging
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.path.pardir)))
 
 # без этих импортов тоже почему-то всё работает
 # import logs.log_configs.server_log_config

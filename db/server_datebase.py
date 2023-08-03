@@ -176,8 +176,9 @@ class ServerStorage:
 
 
 if __name__ == '__main__':
-    print(os.path.join(os.path.dirname(os.path.realpath(__file__))), ('test_server.db'))
-    server_base = ServerStorage(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_server.db'))
+    path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'test_server.db')
+    print(path)
+    server_base = ServerStorage(path)
     server_base.user_login('alesha', '127.0.0.1', 7000)
     server_base.user_login('masha', '127.0.0.2', 5000)
     print('all clients')
