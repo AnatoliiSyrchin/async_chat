@@ -1,3 +1,5 @@
+import binascii
+import hmac
 import os
 import sys
 import socket
@@ -11,9 +13,9 @@ from threading import Thread, Lock
 from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 import logs.log_configs.server_log_config
-from common.variables import DEFAULT_PORT, MAX_CONNECTIONS, ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME,\
+from common.variables import DEFAULT_PORT, MAX_CONNECTIONS, ACTION, PRESENCE, TIME, USER, ACCOUNT_NAME, \
     RESPONSE, ERROR, MESSAGE, TEXT, SENDER, RECIPIENT, EXIT, GET_CONTACTS, ALL_USERS, CONTACTS, ADD_CONTACT, \
-    REMOVE_CONTACT, USERS_REQUEST, CONTACT_NAME
+    REMOVE_CONTACT, USERS_REQUEST, CONTACT_NAME, PUBLIC_KEY, PASSWORD_HASH, REGISTER, CONTACT_IS_ONLINE, CHECK_NAME
 from common.utils import get_message, send_message
 from common.decorators import log
 from common.descriptors import Port
@@ -86,19 +88,46 @@ class Server(metaclass=ServerVerifier):
         :param sock:
         :return:
         """
-        # {'action': 'presence', 'time': 1573760672.167031, 'user': {'account_name': 'Guest'}}
-        if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
-                and USER in message and ACCOUNT_NAME in message[USER]:
 
-            if message[USER][ACCOUNT_NAME] not in self.names.keys():
-                self.names[message[USER][ACCOUNT_NAME]] = sock
-                self.server_base.user_login(message[USER][ACCOUNT_NAME], *sock.getpeername())
+        # registration
+        if ACTION in message and message[ACTION] == REGISTER and TIME in message \
+                and ACCOUNT_NAME in message and PASSWORD_HASH in message:
+
+            result = self.server_base.add_user(message[ACCOUNT_NAME], message[PASSWORD_HASH])
+            logger.debug(result)
+            if result:
+                logger.info('RESPONSE: 200, account registered')
                 send_message(sock, {RESPONSE: 200})
+                # self.all_clients.remove(sock)
+                # sock.close()
             else:
                 logger.info('RESPONSE: 400, ERROR: "account name already exists"')
-                send_message(sock, {RESPONSE: 400, ERROR: 'account name already exists'})
-                self.all_clients.remove(sock)
-                sock.close()
+                send_message(sock, {RESPONSE: 409})
+            self.all_clients.remove(sock)
+            sock.close()
+            return
+
+        # check user is registered
+        if ACTION in message and message[ACTION] == CHECK_NAME and TIME in message \
+                and ACCOUNT_NAME in message :
+
+            result = self.server_base.check_user(message[ACCOUNT_NAME])
+            if result:
+                logger.info('RESPONSE: 200, account registered')
+                send_message(sock, {RESPONSE: 200})
+                # self.all_clients.remove(sock)
+                # sock.close()
+            else:
+                logger.info('RESPONSE: 401, ERROR: account not registered')
+                send_message(sock, {RESPONSE: 401, ERROR: 'account not registered'})
+            self.all_clients.remove(sock)
+            sock.close()
+            return
+        
+        # presence
+        if ACTION in message and message[ACTION] == PRESENCE and TIME in message \
+                and ACCOUNT_NAME in message and PUBLIC_KEY in message:
+            self.authorize_user(message, sock)
             return
 
         elif ACTION in message and message[ACTION] == EXIT and TIME in message and \
@@ -112,7 +141,7 @@ class Server(metaclass=ServerVerifier):
         elif ACTION in message and message[ACTION] == MESSAGE and TIME in message and \
                 SENDER in message and RECIPIENT in message and TEXT in message:
             self.requests.append((sock, message))
-            logger.info(f'recived message {RECIPIENT}, {message}')
+            logger.info(f'recived message {message[RECIPIENT]}, {message}')
             self.server_base.process_message(message[SENDER], message[RECIPIENT])
             send_message(sock, {RESPONSE: 200})
             return
@@ -126,6 +155,14 @@ class Server(metaclass=ServerVerifier):
                 ACCOUNT_NAME in message and self.names[message[ACCOUNT_NAME]] == sock:
             self.server_base.add_contact(message[ACCOUNT_NAME], message[CONTACT_NAME])
             send_message(sock, {RESPONSE: 200, ADD_CONTACT: message[CONTACT_NAME]})
+        
+        elif ACTION in message and message[ACTION] == CONTACT_IS_ONLINE and CONTACT_NAME in message:
+            result = self.server_base.check_contact_is_online(message[CONTACT_NAME])
+            send_message(sock, {RESPONSE: 200, CONTACT_IS_ONLINE: result})
+        
+        elif ACTION in message and message[ACTION] == PUBLIC_KEY and CONTACT_NAME in message:
+            result = self.server_base.get_public_key(message[CONTACT_NAME])
+            send_message(sock, {RESPONSE: 200, PUBLIC_KEY: result})
 
         elif ACTION in message and message[ACTION] == REMOVE_CONTACT and CONTACT_NAME in message and \
                 ACCOUNT_NAME in message and self.names[message[ACCOUNT_NAME]] == sock:
@@ -140,6 +177,52 @@ class Server(metaclass=ServerVerifier):
         else:
             send_message(sock, {RESPONSE: 400, ERROR: 'Bad Request'})
             return
+
+    def authorize_user(self, message, client_socket):
+        logger.debug(f'authorize_user  {message}')
+        client_name = message[ACCOUNT_NAME]
+        public_key = message[PUBLIC_KEY]
+        if client_name not in self.names.keys():
+            check_result = self.server_base.check_user(client_name)
+            logger.debug(f'checked user in base {check_result}')
+            if not check_result:
+                logger.info('RESPONSE: 400, ERROR: "account name not registered"')
+                send_message(client_socket, {RESPONSE: 400, ERROR: "account name not registered"})
+                self.all_clients.remove(client_socket)
+                client_socket.close()
+            # checking password
+            random_str = binascii.hexlify(os.urandom(64))
+            random_str_decoded = random_str.decode('ascii')
+            pass_hash = self.server_base.get_pass_hash(client_name).encode('utf-8')
+            hashed_message = hmac.new(pass_hash, random_str, 'sha256')
+            digest = hashed_message.digest()
+
+            message_auth = {RESPONSE: 511, TEXT: random_str_decoded}
+            logger.debug(f'Auth message = {message_auth}')
+            send_message(client_socket, message_auth)
+            answer = get_message(client_socket)
+
+            client_answer = binascii.a2b_base64(answer[TEXT].encode('ascii'))
+
+            logger.debug(f'received client_hashed_message {client_answer} {digest}')
+            if RESPONSE in answer and answer[RESPONSE] == 511 and hmac.compare_digest(digest, client_answer):
+                self.names[client_name] = client_socket
+                send_message(client_socket, {RESPONSE: 200})
+                self.server_base.user_login(client_name, *client_socket.getpeername(), public_key)
+
+            else:
+                try:
+                    send_message(client_socket, {RESPONSE: 400, ERROR: 'Неверный пароль.'})
+                except OSError:
+                    pass
+                self.all_clients.remove(client_socket)
+                client_socket.close()
+
+        else:
+            logger.info('RESPONSE: 400, ERROR: "account name already exists"')
+            send_message(client_socket, {RESPONSE: 400, ERROR: 'account name already exists'})
+            self.all_clients.remove(client_socket)
+            client_socket.close()
 
     def read_requests(self, r_clients: list):
         for read_waiting_client in r_clients:

@@ -2,10 +2,14 @@
 import sys
 import os
 import logging
+import base64
 
 from PyQt5.QtWidgets import QMainWindow, qApp, QMessageBox, QApplication, QListView
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QBrush, QColor
 from PyQt5.QtCore import pyqtSlot, QEvent, Qt
+
+from Crypto.Cipher import PKCS1_OAEP
+from Crypto.PublicKey import RSA
 
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.path.pardir)))
 
@@ -14,6 +18,7 @@ from client.add_contact import AddContactDialog
 from client.del_contact import DelContactDialog
 from db.client_datebase import ClientStorage
 from client.transport import ClientTransport
+from common.variables import SENDER, TEXT
 # from client.start_dialog import UserNameDialog
 from common.errors import ServerError
 import logs.log_configs.server_log_config
@@ -23,7 +28,7 @@ logger = logging.getLogger('app.client')
 
 # Класс основного C
 class ClientMainWindow(QMainWindow):
-    def __init__(self, database, transport):
+    def __init__(self, database, transport, rsa_key):
         super().__init__()
         # основные переменные
         self.database = database
@@ -51,8 +56,10 @@ class ClientMainWindow(QMainWindow):
         self.history_model = None
         self.messages = QMessageBox()
         self.current_chat = None
+        self.current_chat_key = None
         self.ui.list_messages.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.ui.list_messages.setWordWrap(True)
+        self.decryptor = PKCS1_OAEP.new(rsa_key)
 
         # Даблклик по листу контактов отправляется в обработчик
         self.ui.list_contacts.doubleClicked.connect(self.select_active_user)
@@ -73,6 +80,10 @@ class ClientMainWindow(QMainWindow):
         self.ui.btn_clear.setDisabled(True)
         self.ui.btn_send.setDisabled(True)
         self.ui.text_message.setDisabled(True)
+
+        self.encryptor = None
+        self.current_chat = None
+        self.current_chat_key = None
 
     def history_list_update(self):
         
@@ -114,12 +125,25 @@ class ClientMainWindow(QMainWindow):
     # Function for duble click signal from contact
     def select_active_user(self):
         # Pick choosen user from qlistview
-        self.current_chat = self.ui.list_contacts.currentIndex().data()
-        # call fucnction that sets the active user
-        self.set_active_user()
+        contact_name = self.ui.list_contacts.currentIndex().data()
+        result = self.transport.check_contact_is_online(contact_name)
+        if result:
+            self.current_chat = self.ui.list_contacts.currentIndex().data()
+            # call fucnction that sets the active user
+            self.set_active_user()
+        else:
+            self.messages.critical(self, 'Error', f'user {contact_name} is offline')
 
     # fucnction that sets the active user
     def set_active_user(self):
+        self.current_chat_key = self.transport.key_request(self.current_chat)
+        if self.current_chat_key:
+            self.encryptor = PKCS1_OAEP.new(RSA.import_key(self.current_chat_key))
+
+        if not self.current_chat_key:
+            self.messages.warning(self, 'Ошибка', 'Для выбранного пользователя нет ключа шифрования.')
+            return
+
         # Activating interface for messages
         self.ui.label_new_message.setText(f'Enter message for {self.current_chat}:')
         self.ui.btn_clear.setDisabled(False)
@@ -211,8 +235,12 @@ class ClientMainWindow(QMainWindow):
 
         if not message_text:
             return
+        
+        message_text_encrypted = self.encryptor.encrypt(message_text.encode('utf8'))
+        message_text_encrypted_base64 = base64.b64encode(message_text_encrypted)
+
         try:
-            self.transport.send_message(self.current_chat, message_text)
+            self.transport.send_message(self.current_chat, message_text_encrypted_base64.decode('ascii'))
             pass
         except ServerError as err:
             self.messages.critical(self, 'Error', err.text)
@@ -229,9 +257,22 @@ class ClientMainWindow(QMainWindow):
             self.history_list_update()
 
     # New message receiving slot
-    @pyqtSlot(str)
-    def message(self, sender):
-        logger.debug(f'got message in slot {sender}, {self.current_chat}')
+    @pyqtSlot(dict)
+    def message(self, message):
+
+        sender = message[SENDER]
+        text = message[TEXT]
+        message_text_decoded = base64.b64decode(text)
+        try:
+            message_text_decrypted = self.decryptor.decrypt(message_text_decoded).decode('utf-8')
+        except (ValueError, TypeError):
+            self.messages.warning(
+                self, 'Ошибка', 'Не удалось декодировать сообщение.')
+            return
+
+        self.database.save_message(sender , 'in' , message_text_decrypted)
+
+
         if sender == self.current_chat:
             self.history_list_update()
         else:
@@ -245,7 +286,6 @@ class ClientMainWindow(QMainWindow):
                     self.current_chat = sender
                     self.set_active_user()
             else:
-                print('NO')
                 # Раз нету,спрашиваем хотим ли добавить юзера в контакты.
                 if self.messages.question(self, 'New message',
                                           f'New message from {sender} received. \n' 
@@ -269,6 +309,7 @@ class ClientMainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setStyle('Breeze')
     
     base = ClientStorage(prefix='test_')
     sock = ClientTransport(7000, '127.0.0.1', base, 'test_client')

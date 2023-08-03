@@ -96,7 +96,7 @@ class ServerSettings(QWidget):
     def __init__(self, parent=None):
         super(ServerSettings, self).__init__(parent=parent)
 
-        self.layout = QVBoxLayout()
+        # self.layout = QVBoxLayout()
 
         self.select_base_text = QLabel('Enter location of the data base', self)
         self.select_base_text.setGeometry(20, 20, 220, 20)

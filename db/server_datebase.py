@@ -1,8 +1,13 @@
 
 import os
+import logging
 from sqlalchemy.orm import Session, Mapped, DeclarativeBase, mapped_column, relationship
 from sqlalchemy import create_engine, String, select, ForeignKey
 from datetime import datetime
+
+import logs.log_configs.server_log_config
+
+logger = logging.getLogger('app.server')
 
 
 class ServerStorage:
@@ -15,6 +20,8 @@ class ServerStorage:
 
         id: Mapped[int] = mapped_column(primary_key=True)
         username: Mapped[str] = mapped_column(String(30), unique=True)
+        password_hash: Mapped[str]
+        public_key: Mapped[int] = mapped_column(default=0)
         last_login: Mapped[datetime]
 
         active_user: Mapped["ActiveUsers"] = relationship(back_populates="user")
@@ -76,18 +83,33 @@ class ServerStorage:
             self.session.query(self.ActiveUsers).delete()
             self.session.commit()
 
-    def user_login(self, username, ip_address, port):
+    def add_user(self, username, password_hash):
+        register_time = datetime.now()
+        user = self.session.scalar(select(self.AllUsers).where(self.AllUsers.username == username))
+        if user:
+            return user
+        else:
+            user = self.AllUsers(
+                username=username,
+                last_login=register_time,
+                password_hash=password_hash,
+            )
+            self.session.add(user)
+            self.session.commit()
+            events_history_user = self.UsersEventsHistory(user_id=user.id)
+            self.session.add(events_history_user)
+            self.session.commit()
+            return True
+
+    def user_login(self, username, ip_address, port, public_key):
         login_time = datetime.now()
         user = self.session.scalar(select(self.AllUsers).where(self.AllUsers.username == username))
 
         if user:
             user.last_login = login_time
+            user.public_key = public_key
         else:
-            user = self.AllUsers(username=username, last_login=login_time)
-            self.session.add(user)
-            self.session.commit()
-            events_history_user = self.UsersEventsHistory(user_id=user.id)
-            self.session.add(events_history_user)
+            raise ValueError('User not registered')
 
         active_user = self.ActiveUsers(user_id=user.id, ip_address=ip_address, port=port, login_time=login_time)
         history_user = self.LoginHistory(user_id=user.id, ip_address=ip_address, port=port, login_time=login_time)
@@ -104,6 +126,21 @@ class ServerStorage:
 
     def get_all_users(self):
         return self.session.scalars(select(self.AllUsers))
+
+    def check_user(self, username):
+        return self.session.scalar(select(self.AllUsers).where(self.AllUsers.username == username))
+    
+    def get_public_key(self, username):
+        return self.session.scalar(select(self.AllUsers).where(self.AllUsers.username == username)).public_key
+    
+    def check_contact_is_online(self, username):
+        active_user = self.session.scalar(select(self.ActiveUsers)
+                                          .join(self.ActiveUsers.user)
+                                          .where(self.AllUsers.username == username))
+        return bool(active_user)
+
+    def get_pass_hash(self, username):
+        return self.session.scalar(select(self.AllUsers).where(self.AllUsers.username == username)).password_hash
 
     def show_active_users(self):
         return self.session.scalars(select(self.ActiveUsers).join(self.ActiveUsers.user))
