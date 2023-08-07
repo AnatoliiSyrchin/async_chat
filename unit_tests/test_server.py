@@ -3,7 +3,7 @@ import sys
 sys.path.append('./')
 
 from common.variables import RESPONSE,PRESENCE, ERROR, TIME, USER, ACCOUNT_NAME, ACTION
-from server import process_client_message
+from server.server import process_client_message
 
 
 class TestServer(unittest.TestCase):
