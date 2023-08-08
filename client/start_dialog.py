@@ -18,7 +18,7 @@ from PyQt5.QtCore import Qt
 from common.utils import send_message, get_message
 from common.variables import (REGISTER, PASSWORD_HASH, ACTION, TIME, ACCOUNT_NAME,
                               RESPONSE, ERROR, CHECK_NAME)
-import logs.log_configs.client_log_config
+# import logs.log_configs.client_log_config
 
 logger = logging.getLogger('app.client')
 

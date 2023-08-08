@@ -1,4 +1,4 @@
-"""main client module"""
+""" starting module with argument parser """
 import argparse
 import sys
 import os
@@ -16,7 +16,7 @@ from db.client_datebase import ClientStorage
 from client.transport import ClientTransport
 from client.main_window import ClientMainWindow
 from client.start_dialog import UserNameDialog
-import logs.log_configs.client_log_config
+# import logs.log_configs.client_log_config
 
 logger = logging.getLogger('app.client')
 
@@ -42,7 +42,7 @@ def get_client_parameters() -> tuple:
 
 
 def main():
-    """main client method"""
+    """ starting client method """
     server_address, server_port, client_name, client_password = get_client_parameters()
     client_app = QApplication(sys.argv)
 

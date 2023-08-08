@@ -13,7 +13,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from common.utils import *
 from common.variables import *
 from common.errors import ServerError
-import logs.log_configs.client_log_config
+# import logs.log_configs.client_log_config
 
 # Логер и объект блокировки для работы с сокетом.
 logger = logging.getLogger('app.client')

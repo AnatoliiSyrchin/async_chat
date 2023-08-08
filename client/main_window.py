@@ -7,15 +7,15 @@ from PyQt5.QtWidgets import QMainWindow, qApp, QMessageBox, QApplication
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QBrush, QColor
 from PyQt5.QtCore import pyqtSlot, Qt
 
-from Crypto.Cipher import PKCS1_OAEP
-from Crypto.PublicKey import RSA
+# from Crypto.Cipher import PKCS1_OAEP
+# from Crypto.PublicKey import RSA
 
 from client.main_window_conv import UiMainClientWindow
 from client.add_contact import AddContactDialog
 from client.del_contact import DelContactDialog
 from common.variables import SENDER, TEXT
 from common.errors import ServerError
-import logs.log_configs.client_log_config
+# import logs.log_configs.client_log_config
 
 logger = logging.getLogger('app.client')
 

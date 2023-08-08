@@ -21,7 +21,7 @@ socket_lock = Lock()
 
 
 @log
-def get_server_parameters(port=str(DEFAULT_PORT), address=''):
+def get_server_parameters(port=str(DEFAULT_PORT), address='') -> tuple:
     """
     Загрузка параметров командной строки,
     если нет параметров, то задаём значения по умолчанию.
