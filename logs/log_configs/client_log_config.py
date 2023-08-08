@@ -1,9 +1,9 @@
-import os
 import logging
+import os
 
 logger = logging.getLogger('app.client')
 
-log_file = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)) + '/log_files/app.client.log'
+log_file = os.path.abspath(os.path.join(os.getcwd(), os.path.pardir)) + '/log_files/app.client.log'
 
 formatter = logging.Formatter('%(asctime)s  %(levelname)-8s  %(module)-10s %(message)s')
 
@@ -17,4 +17,3 @@ logger.setLevel(logging.DEBUG)
 if __name__ == '__main__':
     logger.info('test write log')
     logger.critical('critical write log')
-    

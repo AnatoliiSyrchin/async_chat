@@ -1,9 +1,13 @@
+"""
+Start dialog module
+user should enter his username and password
+or register himself
+If everything Ok - user moved to main window
+"""
 import binascii
 import hashlib
 import json
 import logging
-import sys
-import os
 import time
 from socket import socket, AF_INET, SOCK_STREAM
 
@@ -11,19 +15,16 @@ from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QDialog, QPushButton, QLineEdit, QApplication, QLabel, qApp, QMessageBox
 from PyQt5.QtCore import Qt
 
-from common.errors import ServerError
 from common.utils import send_message, get_message
-import logs.log_configs.client_log_config
-
-# sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.path.pardir)))
-
-from common.variables import DEFAULT_PORT, DEFAULT_IP_ADDRESS, REGISTER, PASSWORD_HASH, ACTION, TIME, ACCOUNT_NAME, \
-    RESPONSE, ERROR, PUBLIC_KEY, CHECK_NAME
+from common.variables import (REGISTER, PASSWORD_HASH, ACTION, TIME, ACCOUNT_NAME,
+                              RESPONSE, ERROR, CHECK_NAME)
+# import logs.log_configs.client_log_config
 
 logger = logging.getLogger('app.client')
 
 
 class UserNameDialog(QDialog):
+    """Class for Start dialog"""
     BIG_FONT = QFont("Calibri", 14)
 
     def __init__(self):
@@ -96,6 +97,7 @@ class UserNameDialog(QDialog):
         self.show()
 
     def click(self):
+        """method to handle click on start button"""
         temp_sock = socket(AF_INET, SOCK_STREAM)
         temp_sock.connect(('localhost', 7000))
 
@@ -131,7 +133,11 @@ class UserNameDialog(QDialog):
 
     def click_register(self):
         """
-        Метод проверки правильности ввода и отправаки даннных на сервер
+        method to handle click on register button
+        compare passwords and sends information to server
+        if result is ok:
+        sets text in username and password fields
+        sets flag to true
         """
 
         temp_sock = socket(AF_INET, SOCK_STREAM)
@@ -141,7 +147,7 @@ class UserNameDialog(QDialog):
             self.messages.critical(
                 self, 'Error', 'No user name')
             return
-        elif self.reg_client_password.text() != self.reg_client_password_conf.text():
+        if self.reg_client_password.text() != self.reg_client_password_conf.text():
             self.messages.critical(
                 self, 'Error', 'Passwords dont match')
             return

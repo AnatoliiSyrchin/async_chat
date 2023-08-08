@@ -1,12 +1,13 @@
+""" module with descriptors """
 import logging
 import sys
-
 
 CALLING_MODULE_NAME = sys.argv[0].split('/')[-1].split('.')[0]
 LOGGER = logging.getLogger(f'app.{CALLING_MODULE_NAME}')
 
 
 class Port:
+    """ descriptor that checks if port value is correct """
 
     def __set_name__(self, instance, name):
         self.name = f'_{name}'

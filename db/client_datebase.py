@@ -1,11 +1,10 @@
-
-from sqlalchemy.orm import Session, Mapped, DeclarativeBase, mapped_column, relationship
-from sqlalchemy import create_engine, String, select, ForeignKey, or_
 from datetime import datetime
+
+from sqlalchemy.orm import Session, Mapped, DeclarativeBase, mapped_column
+from sqlalchemy import create_engine, String, select
 
 
 class ClientStorage:
-
     class Base(DeclarativeBase):
         pass
 
@@ -26,7 +25,7 @@ class ClientStorage:
 
         def __repr__(self):
             return f'User contact {self.username}'
-        
+
     class MessageHistory(Base):
         __tablename__ = 'message_history'
 
@@ -51,36 +50,36 @@ class ClientStorage:
             all_users.append(self.AllUsers(username=username))
         self.session.add_all(all_users)
         self.session.commit()
-    
+
     def get_all_users(self):
         return [user.username for user in self.session.scalars(select(self.AllUsers))]
 
     def get_contacts(self):
         return [user.username for user in self.session.scalars(select(self.Contacts))]
-        
+
     def add_contact(self, contact_username: str):
         contact = self.session.scalar(select(self.Contacts).where(self.Contacts.username == contact_username))
 
         if contact:
             return
-      
+
         self.session.add(self.Contacts(username=contact_username))
         self.session.commit()
-      
+
     def del_contact(self, username):
         self.session.delete(self.session.scalar(select(self.Contacts).where(self.Contacts.username == username)))
         self.session.commit()
-    
+
     def check_user(self, username):
         return bool(self.session.scalar(select(self.AllUsers).where(self.AllUsers.username == username)))
-    
+
     def check_contact(self, username):
         return bool(self.session.scalar(select(self.Contacts).where(self.Contacts.username == username)))
-    
+
     def save_message(self, contact, direction, message):
         self.session.add(self.MessageHistory(contact=contact, direction=direction, message=message))
         self.session.commit()
-    
+
     def get_message_history(self, contact=None):
         query = select(self.MessageHistory)
         if contact:
@@ -88,11 +87,11 @@ class ClientStorage:
         else:
             return self.session.scalars(query)
 
-   
+
 if __name__ == '__main__':
     client_datebase = ClientStorage(prefix='test_')
 
-    print(f'Users added to datebase oleg, anna, dmitriy')
+    print('Users added to datebase oleg, anna, dmitriy')
     client_datebase.fill_all_users(['oleg', 'anna', 'dmitriy'])
     print('users in base:')
     print(f'{", ".join(client_datebase.get_all_users())}')
@@ -101,8 +100,6 @@ if __name__ == '__main__':
     print('added contacts oleg, dmitriy')
     client_datebase.add_contact('oleg')
     client_datebase.add_contact('dmitriy')
-    
-
     print('contacts in base:')
     print(f'{", ".join(client_datebase.get_contacts())}')
     print()
@@ -120,12 +117,12 @@ if __name__ == '__main__':
     print('all message history')
     for message in client_datebase.get_message_history():
         print(f'with user {message.contact}, direction: {message.direction}, message: {message.message}')
-    
+
     print('message history from anna')
     for message in client_datebase.get_message_history(contact='anna'):
         print(f'with user {message.contact}, direction: {message.direction}, message: {message.message}')
     print()
-    
+
     print('removed contact oleg')
     client_datebase.del_contact('oleg')
 

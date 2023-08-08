@@ -24,4 +24,4 @@ for i in range(2):
         p])
     )
     print(p)
-    time.sleep(0.1)
+    time.sleep(0.5)

@@ -1,22 +1,22 @@
+""" starting module with argument parser """
 import argparse
 import sys
 import os
 import logging
-import threading
 
 from PyQt5.QtWidgets import QApplication
 from Crypto.PublicKey import RSA
 
 sys.path.append(os.getcwd())
 
-from common.variables import *
+from common.variables import DEFAULT_IP_ADDRESS, DEFAULT_PORT
 from common.errors import ServerError
 from common.decorators import log
 from db.client_datebase import ClientStorage
 from client.transport import ClientTransport
 from client.main_window import ClientMainWindow
 from client.start_dialog import UserNameDialog
-import logs.log_configs.client_log_config
+# import logs.log_configs.client_log_config
 
 logger = logging.getLogger('app.client')
 
@@ -24,8 +24,7 @@ logger = logging.getLogger('app.client')
 @log
 def get_client_parameters() -> tuple:
     """Getting parameters from command line"""
-    # client.py 192.168.57.33 8079
-    # server.py -p 8079 -a 192.168.57.33
+
     parser = argparse.ArgumentParser()
     parser.add_argument('addr', default=DEFAULT_IP_ADDRESS, nargs='?')
     parser.add_argument('port', default=DEFAULT_PORT, type=int, nargs='?')
@@ -43,13 +42,14 @@ def get_client_parameters() -> tuple:
 
 
 def main():
+    """ starting client method """
     server_address, server_port, client_name, client_password = get_client_parameters()
     client_app = QApplication(sys.argv)
 
     if not (client_name and client_password):
         start_dialog = UserNameDialog()
         client_app.exec_()
-        #If user pressed ok, then saving his name and password, else - exit
+        # If user pressed ok, then saving his name and password, else - exit
         if start_dialog.username_checked:
             client_name = start_dialog.client_name.text()
             client_password = start_dialog.client_password.text()
@@ -74,14 +74,14 @@ def main():
     try:
         print(f'Client {client_name}')
         transport = ClientTransport(server_port, server_address, client_database, client_name, client_password, rsa_key)
-    except ServerError as error:
+    except ServerError:
         sys.exit(1)
 
-    transport.setDaemon(True)
+    transport.daemon = True
     transport.start()
 
     del start_dialog
-    
+
     client_window = ClientMainWindow(client_database, transport, rsa_key)
     client_window.make_connection(transport)
     client_window.setWindowTitle(f'{client_name}')

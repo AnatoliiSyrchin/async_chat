@@ -1,7 +1,12 @@
+"""
+the module determines from which file it was called
+and receives the corresponding logger
+"""
+
+import logging
 import os
 import sys
 import traceback
-import logging
 
 sys.path.append(os.path.abspath(os.path.join(os.getcwd(), os.path.pardir)))
 
@@ -14,8 +19,12 @@ LOGGER = logging.getLogger(f'app.{CALLING_MODULE_NAME}')
 
 
 def log(func):
-    def wrapper(*args, **kwargs):
+    """
+    decorator that registers the name of the function being called, parameters,
+    and where the function was called from
+    """
 
+    def wrapper(*args, **kwargs):
         traceback_result = traceback.format_stack()[0].split()
         # изменил получение имени функции, чтобы работало, даже если функция с параметрами
         traceback_func = traceback_result[6].split('(')[0]
@@ -23,8 +32,14 @@ def log(func):
 
         LOGGER.debug(f'Вызов функции {func.__name__} из модуля {func_module} с параметрами {args, kwargs}.'
                      f'Вызов произошел из функции {traceback_func} из модуля {CALLING_MODULE_NAME}.', stacklevel=2)
-        
+
         result = func(*args, **kwargs)
 
         return result
+
     return wrapper
+
+
+def login_required(func):
+    """decorator that check if user is authenticated"""
+    pass

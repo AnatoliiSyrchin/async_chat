@@ -1,3 +1,4 @@
+"""functions used both by clients and server"""
 import json
 from socket import socket
 from common.variables import MAX_PACKAGE_LENGTH, ENCODING
@@ -7,13 +8,12 @@ import logs.log_configs.server_log_config
 
 logger = logging.getLogger('app.server')
 
+
 # @log
 def get_message(sock) -> dict:
     """
-    Утилита приёма и декодирования сообщения
-    принимает байты выдаёт словарь, если принято что-то другое отдаёт ошибку значения
-    :param sock:
-    :return:
+    The utility for receiving and decoding messages
+    recives bytes, returns dict
     """
     encoded_response = sock.recv(MAX_PACKAGE_LENGTH)
     logger.debug(encoded_response)
@@ -26,13 +26,11 @@ def get_message(sock) -> dict:
     raise ValueError
 
 
-@log
-def send_message(sock, message: dict):
+# @log
+def send_message(sock: socket, message: dict):
     """
-    Утилита кодирования и отправки сообщения принимает словарь и отправляет его
-    :param sock:
-    :param message:
-    :return:
+    The utility encoding messages to json
+    end sending to the passed socket
     """
     js_message = json.dumps(message)
     encoded_message = js_message.encode(ENCODING)
